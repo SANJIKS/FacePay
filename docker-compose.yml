@@ -5,6 +5,8 @@ services:
     image: postgres:14.7
     env_file:
       - .env
+    expose:
+      - 5432
     volumes:
       - db:/var/lib/postgresql/data
 
@@ -15,9 +17,11 @@ services:
     volumes:
       - static_volume:/app/static
       - media_volume:/app/media
-      - db:/app/db
+      - .:/app
     ports:
-      - "8001:8000"
+      - "8000:8000"
+    env_file:
+      - .env
     command: gunicorn --access-logfile - --workers 3 --bind 0.0.0.0:8000 core.wsgi:application
 
   nginx:
